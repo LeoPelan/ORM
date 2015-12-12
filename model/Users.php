@@ -2,39 +2,49 @@
 
 class Users
 {
+    protected $tableNameBdd;
+    protected $Id;
+    protected $Name;
+    protected $Password;
 
-protected $id;
-protected $login;
-protected $password;
+    public function set_tableNameBdd($tableNameBdd)
+    {
+      return $this->tableNameBdd = $tableNameBdd;
+    }
 
-public function getId()
-{
-return $this->id;
-}
+    public function get_tableNameBdd()
+    {
+      return $this->tableNameBdd;
+    }
 
-public function setId($id)
-{
-$this->id = $id;
-}
+    public function getId()
+    {
+      return $this->Id;
+    }
 
-public function getLogin()
-{
-return $this->login;
-}
+    public function setId($Id)
+    {
+      $this->Id = $Id;
+    }
 
-public function setLogin($login)
-{
-$this->login = $login;
-}
+    public function getName()
+    {
+      return $this->Name;
+    }
 
-public function getPassword()
-{
-return $this->password;
-}
+    public function setName($Name)
+    {
+      $this->Name = $Name;
+    }
 
-public function setPassword($password)
-{
-$this->password = $password;
-}
+    public function getPassword()
+    {
+      return $this->Password;
+    }
+
+    public function setPassword($Password)
+    {
+      $this->Password = $Password;
+    }
 
 }

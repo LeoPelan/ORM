@@ -5,7 +5,7 @@
  * Date: 09/12/15
  * Time: 12:11
  */
-require_once('Users.php');
+// require_once('Users.php');
 
 class Orm
 {
@@ -22,21 +22,31 @@ class Orm
         return self::$connexion;
     }
 
-    public static function getColSql($tableName){
+    public static function getColSql($tableName)
+    {
       $result = self::getConnexion()->prepare('DESCRIBE '.$tableName);
       $result->execute();
       return $result->fetchAll(\PDO::FETCH_COLUMN);
     }
-    public static function persist($object){
-
+    public static function persist($object)
+    {
       $tableName = $object::getTableName();
       $query = "INSERT INTO `".$tableName."` (Orm::getColSql('user')) VALUES (NULL, '".$object->getLogin()."','".$object->getPassword()."')";
 		  $req = self::$connexion->prepare($query);
       // QUERYBUILDER
 		  $req->execute();
     }
+    public static function getAll($object)
+	  {
+      $tableName = $object::getTableName();
+      $query = "SELECT * FROM `".$tableName."`";
+      $req = self::$connexion->prepare($query);
+      $req->execute();
+      return $req->fetchAll();
+	  }
 
-    public function deleteById($table, $id){
+    public static function deleteById($table, $id)
+    {
       $query = "DELETE FROM ".$table." WHERE id = ".$id ;
       $req = self::$connexion->prepare($query);
       $req->execute();

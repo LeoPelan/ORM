@@ -1,55 +1,61 @@
 <?php
 
-$fields = [];
-//
-foreach($argv as $i=>$field){
-    if(!$i){
-        continue;
-    }
-    $fields[] = $field;
-}
+require_once('Orm.php');
 
-$options = getopt("c:");
-$character_mask = "-c";
-$str = reset($options);
-$className = ltrim ( $str, $character_mask );
+$dbHost = $argv[1];
+$dbUser = $argv[2];
+$dbPass = $argv[3];
+$dbName = $argv[4];
+$tableName = $argv[5];
+$className = ucfirst($argv[6]);
+
+Orm::init($dbHost, $dbName, $dbUser, $dbPass);
+$fields = (Orm::getColSql($tableName));
+
 $tabs = 4;
-$element = $className;
-unset($fields[array_search($element, $fields)]);
 
-
-function do_tabs($tabs)
+  function do_tabs($tabs)
 {
     $ret = '';
-
     for ($i = 0; $i < $tabs; $i ++)
         $ret .= ' ';
     return $ret;
 }
 
 $code = "<?php\n\n";
-
 $code .= "class $className\n{\n";
+$code .= do_tabs($tabs) . 'protected $tableNameBdd'.";\n";
 
-foreach ($fields as $field)
+  foreach ($fields as $field)
 {
     $code .= do_tabs($tabs) . 'protected $'.$field.";\n";
 }
 
 $code .= "\n";
 
-foreach ($fields as $field)
+$code .= do_tabs($tabs) . 'public function set_tableNameBdd'.'($tableNameBdd'.")\n";
+$code .= do_tabs($tabs) . "{\n";
+$code .= do_tabs($tabs+2) . 'return $this->tableNameBdd'.' = $tableNameBdd'.";\n";
+$code .= do_tabs($tabs) . "}\n";
+$code .= "\n";
+$code .= do_tabs($tabs) . 'public function get_tableNameBdd'.'()'."\n";
+$code .= do_tabs($tabs) . "{\n";
+$code .= do_tabs($tabs+2) . 'return $this->tableNameBdd'.";\n";
+$code .= do_tabs($tabs) . "}\n";
+$code .= "\n";
+
+  foreach ($fields as $field)
 {
-    $code .= do_tabs($tabs) . 'public function get'.ucfirst($field)."()\n";
-    $code .= do_tabs($tabs) . "{\n";
-    $code .= do_tabs($tabs+2) . 'return $this->'.$field.";\n";
-    $code .= do_tabs($tabs) . "}\n\n";
-    $code .= do_tabs($tabs) . 'public function set'.ucfirst($field).'($'.$field.")\n";
-    $code .= do_tabs($tabs) . "{\n";
-    $code .= do_tabs($tabs+2) . '$this->'.$field.' = $'.$field.";\n";
-    $code .= do_tabs($tabs) . "}\n\n";
+  $code .= do_tabs($tabs) . 'public function get'.ucfirst($field)."()\n";
+  $code .= do_tabs($tabs) . "{\n";
+  $code .= do_tabs($tabs+2) . 'return $this->'.$field.";\n";
+  $code .= do_tabs($tabs) . "}\n\n";
+  $code .= do_tabs($tabs) . 'public function set'.ucfirst($field).'($'.$field.")\n";
+  $code .= do_tabs($tabs) . "{\n";
+  $code .= do_tabs($tabs+2) . '$this->'.$field.' = $'.$field.";\n";
+  $code .= do_tabs($tabs) . "}\n\n";
 }
 
 $code .= "}\n";
 
-file_put_contents($className.".php", $code);
+file_put_contents(''.$className.".php", $code);
