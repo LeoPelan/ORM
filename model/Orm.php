@@ -22,14 +22,18 @@ class Orm
         return self::$connexion;
     }
 
-    public function persist($object)
-    {
-  		$classObject = get_class($object);
-  		$tableName = $classObject::getTableName();
-  		$query = "INSERT INTO `".$tableName."` ( `id`, `name`, `password`) VALUES (NULL, '".$object->getLogin()."','".$object->getPassword()."')";
-  		var_dump(self::$connexion->prepare($query));
-  		$req = self::$connexion->prepare($query);
-  		$req->execute();
+    public static function getColSql($tableName){
+      $result = self::getConnexion()->prepare('DESCRIBE '.$tableName);
+      $result->execute();
+      return $result->fetchAll(\PDO::FETCH_COLUMN);
+    }
+    public static function persist($object){
+
+      $tableName = $object::getTableName();
+      $query = "INSERT INTO `".$tableName."` (Orm::getColSql('user')) VALUES (NULL, '".$object->getLogin()."','".$object->getPassword()."')";
+		  $req = self::$connexion->prepare($query);
+      // QUERYBUILDER
+		  $req->execute();
     }
 
     public function deleteById($table, $id){
@@ -37,6 +41,5 @@ class Orm
       $req = self::$connexion->prepare($query);
       $req->execute();
     }
-
 
 }
