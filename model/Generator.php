@@ -2,14 +2,14 @@
 
 require_once('Orm.php');
 
-$dbHost = $argv[1];
-$dbUser = $argv[2];
-$dbPass = $argv[3];
+$Host = $argv[1];
+$User = $argv[2];
+$Password = $argv[3];
 $dbName = $argv[4];
 $tableName = $argv[5];
 $className = ucfirst($argv[6]);
 
-Orm::init($dbHost, $dbName, $dbUser, $dbPass);
+Orm::init($Host, $dbName, $User, $Password);
 $fields = (Orm::getColSql($tableName));
 
 $tabs = 4;
