@@ -1,6 +1,6 @@
 <?php
 
-require_once('Orm.php');
+require_once('model/Orm.php');
 
 $Host = $argv[1];
 $User = $argv[2];
