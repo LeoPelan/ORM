@@ -24,9 +24,11 @@ class Orm
 
     public static function getColSql($tableName)
     {
-      $result = self::getConnexion()->prepare('DESCRIBE '.$tableName);
-      $result->execute();
-      return $result->fetchAll(\PDO::FETCH_COLUMN);
+      $query = 'DESCRIBE '.$tableName;
+      $req = self::getConnexion()->prepare($query);
+      $res = $req->execute();
+      Orm::writeLog($req, $res, $query);
+      return $req->fetchAll(\PDO::FETCH_COLUMN);
     }
     public static function persist($tableName)
     {
@@ -39,7 +41,8 @@ class Orm
 	  {
       $query = "SELECT * FROM `".$tableName."`";
       $req = self::$connexion->prepare($query);
-      $req->execute();
+      $res = $req->execute();
+      Orm::writeLog($req, $res, $query);
       $res = $req->fetchAll();
 
       return $res;
@@ -49,21 +52,33 @@ class Orm
     {
       $query = "DELETE FROM ".$tableName." WHERE id = ".$id ;
       $req = self::$connexion->prepare($query);
-      $req->execute();
+      $res = $req->execute();
+      Orm::writeLog($req, $res, $query);
       $res = $req->fetchAll();
 
       return $res;
     }
 
-    public static function registerLog(){
-      $error_log = __DIR__.'';
-      $access_log = __DIR__.'';
+    public static function writeLog($req, $res, $query){
+      $error_log = __DIR__.'/../log/error.log';
+      $access_log = __DIR__.'/../log/access.log';
+
+    if(!$res){
+      $errorMsg = $req->errorInfo();
+      $data = $errorMsg[2]."\n";
+      file_put_contents($error_log, $data, FILE_APPEND);
+    } else {
+      $validMsg = $query;
+      $data =  $validMsg."\n";
+      file_put_contents($access_log, $data, FILE_APPEND);
     }
+  }
 
     public static function count($tableName){
 		$query = "SELECT COUNT(*) FROM " . $tableName;
 		$req = self::$connexion->prepare($query);
-		$req->execute();
+		$res = $req->execute();
+    Orm::writeLog($req, $res, $query);
 		$res = $req->fetch();
 
 		return $res[0];
