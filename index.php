@@ -7,6 +7,6 @@
  */
 require_once ('orm/Orm.php');
 Orm::init('localhost','orm','root','root');
-var_dump(Orm::getAll('user'));
-var_dump(Orm::count('user'));
-Orm::deleteById('user','2');
+// var_dump(Orm::getAll('user'));
+// var_dump(Orm::count('user'));
+// Orm::deleteById('user','2');
